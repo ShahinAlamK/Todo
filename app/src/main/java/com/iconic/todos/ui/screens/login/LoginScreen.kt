@@ -1,6 +1,7 @@
 package com.iconic.todos.ui.screens.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -50,103 +51,90 @@ fun LoginScreen(
     if (viewModel.loginUiState.isLoading) {
         LoadingDialog(msg = "Please wait...")
     }
-
-    Box(
-        modifier = Modifier.fillMaxSize()
+    Column(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
+            .fillMaxSize()
+            .padding(horizontal = 30.dp)
+            .verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        Spacer(modifier = Modifier.height(100.dp))
 
-        Image(
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxHeight()
-                .blur(8.dp),
-            painter = painterResource(id = R.drawable.kinetic_avenue),
-            contentDescription = ""
+        Text(
+            text = "Login", style = MaterialTheme.typography.headlineLarge.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        )
+        Spacer(modifier = Modifier.height(90.dp))
+
+        //Email Input
+        CustomField(
+            value = viewModel.loginUiState.email,
+            onValueChange = {
+                viewModel.updateState(viewModel.loginUiState.copy(email = it))
+            },
+            placeholder = "Enter Email",
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_email),
+                    contentDescription = ""
+                )
+            }
         )
 
-        Column(
-            modifier = Modifier
-                .statusBarsPadding()
-                .fillMaxSize()
-                .padding(horizontal = 30.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(modifier = Modifier.height(100.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
-                text = "Login", style = MaterialTheme.typography.headlineLarge.copy(
-                    color = MaterialTheme.colorScheme.onSurface
+        //Passwords Input
+        CustomField(
+            value = viewModel.loginUiState.password,
+            onValueChange = { viewModel.updateState(viewModel.loginUiState.copy(password = it)) },
+            placeholder = "Passwords",
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+            visualTransformation = if (viewModel.loginUiState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_lock),
+                    contentDescription = ""
                 )
-            )
-            Spacer(modifier = Modifier.height(90.dp))
-
-            //Email Input
-            CustomField(
-                value = viewModel.loginUiState.email,
-                onValueChange = {
-                    viewModel.updateState(viewModel.loginUiState.copy(email = it))
-                },
-                placeholder = "Enter Email",
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-                leadingIcon = {
+            },
+            trailingIcon = {
+                IconButton(onClick = { viewModel.passwordVisible() }) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_email),
+                        painter = painterResource(id = if (viewModel.loginUiState.isPasswordVisible) R.drawable.visibility_off else R.drawable.visibility),
                         contentDescription = ""
                     )
                 }
+            }
+        )
+
+        Spacer(modifier = Modifier.height(70.dp))
+
+        Buttons(
+            enabled = viewModel.loginUiState.isEnable,
+            label = "Login",
+            onClick = { viewModel.login() }
+        )
+
+        Spacer(modifier = Modifier.height(30.dp))
+        Buttons(
+            isOutline = true,
+            label = "Create a account",
+            onClick = navigateToRegister
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        if (viewModel.loginUiState.error != null) Text(
+            text = viewModel.loginUiState.error!!,
+            style = MaterialTheme.typography.bodyMedium.copy(
+                color = MaterialTheme.colorScheme.error
             )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            //Passwords Input
-            CustomField(
-                value = viewModel.loginUiState.password,
-                onValueChange = { viewModel.updateState(viewModel.loginUiState.copy(password = it)) },
-                placeholder = "Passwords",
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
-                visualTransformation = if (viewModel.loginUiState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_lock),
-                        contentDescription = ""
-                    )
-                },
-                trailingIcon = {
-                    IconButton(onClick = { viewModel.passwordVisible() }) {
-                        Icon(
-                            painter = painterResource(id = if (viewModel.loginUiState.isPasswordVisible) R.drawable.visibility_off else R.drawable.visibility),
-                            contentDescription = ""
-                        )
-                    }
-                }
-            )
-
-            Spacer(modifier = Modifier.height(70.dp))
-
-            Buttons(
-                enabled = viewModel.loginUiState.isEnable,
-                label = "Login",
-                onClick = { viewModel.login() }
-            )
-
-            Spacer(modifier = Modifier.height(30.dp))
-            Buttons(
-                isOutline = true,
-                label = "Create a account",
-                onClick = navigateToRegister
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            if (viewModel.loginUiState.error != null) Text(
-                text = viewModel.loginUiState.error!!,
-                style = MaterialTheme.typography.bodyMedium.copy(
-                    color = MaterialTheme.colorScheme.error
-                )
-            )
-            Spacer(modifier = Modifier.height(50.dp))
-        }
+        )
+        Spacer(modifier = Modifier.height(50.dp))
     }
+
 
 }
 

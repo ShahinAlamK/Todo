@@ -20,13 +20,6 @@ fun WallpaperBackground(modifier: Modifier = Modifier, content: @Composable () -
             .blur(8.dp)
             .then(modifier)
     ) {
-        Image(
-            modifier = Modifier
-                .fillMaxHeight(),
-            contentScale = ContentScale.Crop,
-            painter = painterResource(id = R.drawable.kinetic_avenue),
-            contentDescription = null
-        )
         content()
     }
 }

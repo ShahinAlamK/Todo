@@ -10,26 +10,33 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class AccountRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore) : AccountRepository {
+class AccountRepositoryImpl @Inject constructor(private val firestore: FirebaseFirestore) :
+    AccountRepository {
 
     override suspend fun getProfile(uid: String): Flow<AppResponse<UserModel>> = flow {
         emit(AppResponse.Loading)
-        firestore.collection("users").document(uid).snapshots().collect {
-            if (it.exists()) {
+        try {
+            firestore.collection("users").document(uid).snapshots().collect {
                 val userModel = it.toObject(UserModel::class.java)
                 emit(AppResponse.Success(userModel!!))
-            } else {
-                emit(AppResponse.Failure(Exception("User not found")))
             }
+        } catch (e: Exception) {
+            emit(AppResponse.Failure(e))
         }
     }
 
-    override suspend fun updateProfile(uid: String, username: String, profile: String): Flow<AppResponse<String>> = flow {
+    override suspend fun updateProfile(
+        uid: String,
+        username: String,
+        profile: String
+    ): Flow<AppResponse<String>> = flow {
         emit(AppResponse.Loading)
-        firestore.collection("users").document(uid).update(mapOf(
+        firestore.collection("users").document(uid).update(
+            mapOf(
                 "username" to username,
                 "profile" to profile
-            )).await()
+            )
+        ).await()
         emit(AppResponse.Success("Successfully updated"))
     }
 

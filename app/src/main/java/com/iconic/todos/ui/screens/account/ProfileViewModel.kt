@@ -33,19 +33,17 @@ class ProfileViewModel @Inject constructor(
     private fun getProfile() {
         viewModelScope.launch {
             accountRepository.getProfile(authRepository.currentUser!!.uid).collect {
-                when (it) {
+                profileUiState = when (it) {
                     is AppResponse.Failure -> {
-                        profileUiState = profileUiState.copy(error = it.msg.localizedMessage)
-                        profileUiState = profileUiState.copy(isLoading = false)
+                          ProfileUiState(error = it.msg.localizedMessage)
                     }
 
                     AppResponse.Loading -> {
-                        profileUiState = profileUiState.copy(isLoading = true)
+                        ProfileUiState(isLoading = true)
                     }
 
                     is AppResponse.Success -> {
-                        profileUiState = profileUiState.copy(userModel = it.data)
-                        profileUiState = profileUiState.copy(isLoading = false)
+                        ProfileUiState(userModel = it.data)
                     }
                 }
             }

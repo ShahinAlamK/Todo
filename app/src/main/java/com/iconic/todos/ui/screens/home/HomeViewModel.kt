@@ -1,5 +1,6 @@
 package com.iconic.todos.ui.screens.home
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,19 +30,17 @@ class HomeViewModel @Inject constructor(
     private fun getAllTodos() {
         viewModelScope.launch {
             todoRepository.getAllTodos(authRepository.currentUser!!.uid).collect {
-                when (it) {
+                homeUiState = when (it) {
                     is AppResponse.Failure -> {
-                        homeUiState = homeUiState.copy(isLoading = false)
-                        homeUiState = homeUiState.copy(error = it.msg.localizedMessage)
+                        HomeUiState(error = it.msg.localizedMessage)
                     }
 
                     is AppResponse.Loading -> {
-                        homeUiState = homeUiState.copy(isLoading = true)
+                        HomeUiState(isLoading = true)
                     }
 
                     is AppResponse.Success -> {
-                        homeUiState = homeUiState.copy(todos = it.data)
-                        homeUiState = homeUiState.copy(isLoading = false)
+                        HomeUiState(todos = it.data)
                     }
                 }
             }
@@ -61,18 +60,17 @@ class HomeViewModel @Inject constructor(
     fun deleteTodo() {
         viewModelScope.launch {
             todoRepository.deleteTodo(authRepository.currentUser!!.uid, todo).collect {
-                when (it) {
+                homeUiState = when (it) {
                     is AppResponse.Failure -> {
-                        homeUiState = homeUiState.copy(isDelete = false)
-                        homeUiState = homeUiState.copy(error = it.msg.localizedMessage)
+                        homeUiState.copy(error = it.msg.localizedMessage)
                     }
 
                     AppResponse.Loading -> {
-                        homeUiState = homeUiState.copy(isDelete = true)
+                        homeUiState.copy(isDelete = true)
                     }
 
                     is AppResponse.Success -> {
-                        homeUiState = homeUiState.copy(isDelete = false)
+                        homeUiState.copy(isDelete = false)
                     }
                 }
             }

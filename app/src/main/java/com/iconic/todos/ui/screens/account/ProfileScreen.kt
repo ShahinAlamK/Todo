@@ -32,6 +32,7 @@ import coil.request.ImageRequest
 import com.iconic.todos.R
 import com.iconic.todos.components.Buttons
 import com.iconic.todos.components.CustomField
+import com.iconic.todos.ui.components.CommonLoading
 import com.iconic.todos.ui.components.ErrorScreen
 import com.iconic.todos.ui.components.LoadingDialog
 import com.iconic.todos.ui.screens.home.HomeViewModel
@@ -87,9 +88,12 @@ fun ProfileScreen(
         }
 
     ) { paddingValues ->
-        if (viewModel.profileUiState.error != null)
+
+        if (viewModel.profileUiState.isLoading) {
+            CommonLoading()
+        } else if (viewModel.profileUiState.error != null) {
             ErrorScreen(msg = viewModel.profileUiState.error!!)
-        else
+        } else
             Column(
                 modifier = Modifier
                     .fillMaxSize()

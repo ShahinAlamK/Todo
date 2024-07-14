@@ -1,6 +1,7 @@
 package com.iconic.todos.ui.screens.register
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -46,110 +47,97 @@ fun RegisterScreen(
 
     if (viewModel.registerUiState.isLoading) LoadingDialog(msg = "Please wait...")
 
-    Box(
-        modifier = Modifier.fillMaxSize()
+    LazyColumn(
+        modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding()
+            .fillMaxSize()
+            .padding(horizontal = 30.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        item {
+            Spacer(modifier = Modifier.height(100.dp))
 
-        Image(
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxHeight()
-                .blur(8.dp),
-            painter = painterResource(id = R.drawable.zune),
-            contentDescription = ""
-        )
-
-
-        LazyColumn(
-            modifier = Modifier
-                .statusBarsPadding()
-                .fillMaxSize()
-                .padding(horizontal = 30.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            item {
-                Spacer(modifier = Modifier.height(100.dp))
-
-                Text(
-                    text = "Create a Account", style = MaterialTheme.typography.headlineLarge.copy(
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
+            Text(
+                text = "Create a Account", style = MaterialTheme.typography.headlineLarge.copy(
+                    color = MaterialTheme.colorScheme.onSurface
                 )
-                Spacer(modifier = Modifier.height(90.dp))
+            )
+            Spacer(modifier = Modifier.height(90.dp))
 
-                //Username
-                CustomField(
-                    value = viewModel.registerUiState.username,
-                    onValueChange = { viewModel.updateState(viewModel.registerUiState.copy(username = it)) },
-                    placeholder = "Username",
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
-                    leadingIcon = {
+            //Username
+            CustomField(
+                value = viewModel.registerUiState.username,
+                onValueChange = { viewModel.updateState(viewModel.registerUiState.copy(username = it)) },
+                placeholder = "Username",
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Text),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_person),
+                        contentDescription = ""
+                    )
+                }
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            //Email Input
+            CustomField(
+                value = viewModel.registerUiState.email,
+                onValueChange = { viewModel.updateState(viewModel.registerUiState.copy(email = it)) },
+                placeholder = "Enter Email",
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_email),
+                        contentDescription = ""
+                    )
+                },
+
+                )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            //Passwords Input
+            CustomField(
+                value = viewModel.registerUiState.password,
+                onValueChange = { viewModel.updateState(viewModel.registerUiState.copy(password = it)) },
+                placeholder = "Passwords",
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
+                visualTransformation = if (viewModel.registerUiState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_lock),
+                        contentDescription = ""
+                    )
+                },
+                trailingIcon = {
+                    IconButton(onClick = { viewModel.passwordVisible() }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_person),
+                            painter = painterResource(id = if (viewModel.registerUiState.isPasswordVisible) R.drawable.visibility_off else R.drawable.visibility),
                             contentDescription = ""
                         )
                     }
+                }
+            )
+
+            Spacer(modifier = Modifier.height(50.dp))
+            Buttons(
+                enabled = viewModel.registerUiState.isEnable,
+                label = "Register",
+                onClick = {
+                    viewModel.register()
+                }
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+
+            if (viewModel.registerUiState.error != null) Text(
+                text = viewModel.registerUiState.error!!,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = MaterialTheme.colorScheme.error
                 )
-                Spacer(modifier = Modifier.height(20.dp))
-
-                //Email Input
-                CustomField(
-                    value = viewModel.registerUiState.email,
-                    onValueChange = { viewModel.updateState(viewModel.registerUiState.copy(email = it)) },
-                    placeholder = "Enter Email",
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_email),
-                            contentDescription = ""
-                        )
-                    },
-
-                    )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                //Passwords Input
-                CustomField(
-                    value = viewModel.registerUiState.password,
-                    onValueChange = { viewModel.updateState(viewModel.registerUiState.copy(password = it)) },
-                    placeholder = "Passwords",
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
-                    visualTransformation = if (viewModel.registerUiState.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    leadingIcon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_lock),
-                            contentDescription = ""
-                        )
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = { viewModel.passwordVisible() }) {
-                            Icon(
-                                painter = painterResource(id = if (viewModel.registerUiState.isPasswordVisible) R.drawable.visibility_off else R.drawable.visibility),
-                                contentDescription = ""
-                            )
-                        }
-                    }
-                )
-
-                Spacer(modifier = Modifier.height(50.dp))
-                Buttons(
-                    enabled = viewModel.registerUiState.isEnable,
-                    label = "Register",
-                    onClick = {
-                        viewModel.register()
-                    }
-                )
-                Spacer(modifier = Modifier.height(20.dp))
-
-                if (viewModel.registerUiState.error != null) Text(
-                    text = viewModel.registerUiState.error!!,
-                    style = MaterialTheme.typography.bodyMedium.copy(
-                        color = MaterialTheme.colorScheme.error
-                    )
-                )
-                Spacer(modifier = Modifier.height(50.dp))
-            }
+            )
+            Spacer(modifier = Modifier.height(50.dp))
         }
     }
+
 }

@@ -112,24 +112,19 @@ fun HomeScreen(
         }
 
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .padding(paddingValues)
-                .padding(horizontal = 5.dp)
-        ) {
-            if (homeViewModel.homeUiState.isLoading) {
-                CommonLoading()
-            } else if (homeViewModel.homeUiState.error != null) {
-                ErrorScreen(msg = homeViewModel.homeUiState.error!!)
+        if (homeViewModel.homeUiState.isLoading) {
+            CommonLoading()
+        } else if (homeViewModel.homeUiState.error != null) {
+            ErrorScreen(msg = homeViewModel.homeUiState.error!!)
+        } else {
+            if (homeViewModel.homeUiState.todos.isEmpty()) {
+                EmptyScreen()
             } else {
-                if (homeViewModel.homeUiState.todos.isEmpty()) {
-                    EmptyScreen()
-                } else {
-                    TodoList(
-                        viewModel = homeViewModel,
-                        homeUiState = homeViewModel.homeUiState
-                    )
-                }
+                TodoList(
+                    modifier = Modifier.padding(paddingValues),
+                    viewModel = homeViewModel,
+                    homeUiState = homeViewModel.homeUiState
+                )
             }
 
         }
@@ -146,8 +141,7 @@ fun TodoList(
 ) {
     LazyColumn(
         modifier = modifier
-            .fillMaxSize()
-            .then(modifier),
+            .fillMaxSize(),
     ) {
         items(homeUiState.todos.size) {
             Spacer(modifier = Modifier.height(10.dp))
