@@ -12,11 +12,11 @@ interface TodoRepository {
 
     suspend fun deleteTodo(id: String,todo: Todo): Flow<AppResponse<String>>
 
-    suspend fun updateTodo(todo: Todo): Flow<AppResponse<String>>
+    suspend fun updateTodo(todo: Todo,currentId:String): Flow<AppResponse<String>>
 
     suspend fun deleteAllTodos(id: String): Flow<AppResponse<String>>
 
-    suspend fun getTodoById(id: String): Flow<AppResponse<Todo>>
+    suspend fun getTodoById(id: String,currentId:String): Flow<AppResponse<Todo>>
 
 
 }

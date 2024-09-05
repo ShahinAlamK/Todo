@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -113,6 +114,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(70.dp))
 
         Buttons(
+            shapes = RoundedCornerShape(0.dp),
             enabled = viewModel.loginUiState.isEnable,
             label = "Login",
             onClick = { viewModel.login() }
@@ -120,6 +122,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         Buttons(
+            shapes = RoundedCornerShape(0.dp),
             isOutline = true,
             label = "Create a account",
             onClick = navigateToRegister

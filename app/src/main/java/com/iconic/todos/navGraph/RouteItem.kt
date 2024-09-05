@@ -6,6 +6,8 @@ sealed class RouteItem(val route:String) {
     data object Register:RouteItem("register_screen")
 
     data object Home:RouteItem("home_screen")
+    data object Create:RouteItem("create_screen")
+    data object Update:RouteItem("update_screen")
     data object Profile:RouteItem("profile_screen")
 
 }

@@ -2,14 +2,18 @@ package com.iconic.todos.navGraph
 
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.iconic.todos.ui.screens.account.ProfileScreen
+import com.iconic.todos.ui.screens.create.CreateScreen
 import com.iconic.todos.ui.screens.home.HomeScreen
 import com.iconic.todos.ui.screens.login.LoginScreen
 import com.iconic.todos.ui.screens.login.LoginViewModel
 import com.iconic.todos.ui.screens.register.RegisterScreen
+import com.iconic.todos.ui.screens.update.UpdateScreen
 
 @Composable
 fun Routes(
@@ -50,12 +54,32 @@ fun Routes(
             )
         }
         composable(RouteItem.Home.route) {
-            HomeScreen(navigateToProfile = {
-                navController.navigate(
-                    RouteItem.Profile.route
-                )
-            })
+            HomeScreen(
+                navigateToProfile = {
+                    navController.navigate(RouteItem.Profile.route)
+                },
+                navigateToUpdate = {
+                    navController.navigate("${RouteItem.Update.route}/$it")
+                },
+                navigateToCreate = {
+                    navController.navigate(RouteItem.Create.route)
+                }
+            )
         }
+        composable(RouteItem.Create.route) {
+            CreateScreen(
+                navigateToBack = { navController.popBackStack() }
+            )
+        }
+
+        composable("${RouteItem.Update.route}/{id}",
+        ) {
+            UpdateScreen(
+                navigateToBack = { navController.popBackStack() }
+            )
+        }
+
+
         composable(RouteItem.Profile.route) {
             ProfileScreen(
                 logOut = {

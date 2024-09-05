@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.iconic.todos.domain.models.Todo
 import com.iconic.todos.domain.repository.AuthRepository
 import com.iconic.todos.domain.repository.TodoRepository
+import com.iconic.todos.local.model.TodoLocal
+import com.iconic.todos.local.repository.LocalTodoRepositoryImpl
 import com.iconic.todos.utils.AppResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val todoRepository: TodoRepository,
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val localTodoRepository: LocalTodoRepositoryImpl
 ) : ViewModel() {
 
     var homeUiState: HomeUiState by mutableStateOf(HomeUiState())
@@ -40,6 +43,7 @@ class HomeViewModel @Inject constructor(
                     }
 
                     is AppResponse.Success -> {
+                        localTodoRepository.insertTodo(it.data.map {item -> item.toTodo() })
                         HomeUiState(todos = it.data)
                     }
                 }
@@ -89,5 +93,16 @@ class HomeViewModel @Inject constructor(
         }
 
     }
+}
+
+fun Todo.toTodo(): TodoLocal {
+    return TodoLocal(
+        id = id,
+        title = title,
+        description = description,
+        isDone = isDone,
+        color = color,
+        date = date
+    )
 }
 

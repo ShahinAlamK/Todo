@@ -51,10 +51,10 @@ class TodoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateTodo(todo: Todo): Flow<AppResponse<String>> = flow {
+    override suspend fun updateTodo(todo: Todo,currentId:String): Flow<AppResponse<String>> = flow {
         emit(AppResponse.Loading)
         try {
-            collectionReference.document(todo.id).collection("todo").document(todo.id).set(todo)
+            collectionReference.document(currentId).collection("todo").document(todo.id).set(todo)
                 .await()
             emit(AppResponse.Success("Successfully deleted"))
         } catch (e: Exception) {
@@ -74,10 +74,10 @@ class TodoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTodoById(id: String): Flow<AppResponse<Todo>> = flow {
+    override suspend fun getTodoById(id: String,currentId:String): Flow<AppResponse<Todo>> = flow {
         emit(AppResponse.Loading)
         try {
-            collectionReference.document(id).collection("todo").document(id).snapshots().collect {
+            collectionReference.document(currentId).collection("todo").document(id).snapshots().collect {
                 val todo = it.toObject(Todo::class.java)
                 emit(AppResponse.Success(todo!!))
             }

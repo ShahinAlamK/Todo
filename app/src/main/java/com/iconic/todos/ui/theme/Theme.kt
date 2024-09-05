@@ -31,7 +31,7 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun TodoTheme(
-    darkTheme: Boolean = true,
+    darkTheme: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme =if(darkTheme) DarkColorScheme else LightColorScheme

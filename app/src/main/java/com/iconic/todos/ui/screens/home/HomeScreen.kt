@@ -42,17 +42,12 @@ import com.iconic.todos.ui.screens.create.CreateViewModel
 @Composable
 fun HomeScreen(
     navigateToProfile: () -> Unit,
+    navigateToCreate: () -> Unit,
+    navigateToUpdate: (String) -> Unit,
     viewModel: ProfileViewModel = hiltViewModel(),
     homeViewModel: HomeViewModel = hiltViewModel(),
     createViewModel: CreateViewModel = hiltViewModel()
 ) {
-
-    CreateScreen(
-        createViewModel = createViewModel,
-        isOpen = createViewModel.createTodoUiState.openDialog,
-        cancel = { createViewModel.openDialog() },
-        create = { createViewModel.createTodo() }
-    )
 
     DeleteTodo(
         isDelete = homeViewModel.homeUiState.delete,
@@ -63,7 +58,6 @@ fun HomeScreen(
             homeViewModel.deleteToggles()
         },
     )
-
 
     Scaffold(
         topBar = {
@@ -88,24 +82,16 @@ fun HomeScreen(
                 },
                 actions = {
 
-                    RoundIcon(color = MaterialTheme.colorScheme.primary, icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_delete),
-                            contentDescription = ""
-                        )
-                    },
-                        onClick = {
-                            homeViewModel.deleteAllTodo()
-                        })
-                    Spacer(modifier = Modifier.size(20.dp))
-
-                    RoundIcon(color = MaterialTheme.colorScheme.primary, icon = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_add),
-                            contentDescription = ""
-                        )
-                    },
-                        onClick = { createViewModel.openDialog() })
+                    RoundIcon(
+                        color = MaterialTheme.colorScheme.primary,
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_add),
+                                contentDescription = ""
+                            )
+                        },
+                        onClick = navigateToCreate
+                    )
 
                     Spacer(modifier = Modifier.size(10.dp))
                 })
@@ -123,6 +109,7 @@ fun HomeScreen(
                 TodoList(
                     modifier = Modifier.padding(paddingValues),
                     viewModel = homeViewModel,
+                    update = navigateToUpdate,
                     homeUiState = homeViewModel.homeUiState
                 )
             }
@@ -137,7 +124,8 @@ fun HomeScreen(
 fun TodoList(
     modifier: Modifier = Modifier,
     homeUiState: HomeUiState,
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel,
+    update: (String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier
@@ -146,6 +134,7 @@ fun TodoList(
         items(homeUiState.todos.size) {
             Spacer(modifier = Modifier.height(10.dp))
             TodoCard(
+                update = update,
                 index = it + 1,
                 todo = homeUiState.todos[it],
                 delete = { todo ->

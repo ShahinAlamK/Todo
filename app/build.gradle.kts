@@ -62,8 +62,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.firebase.auth)
-    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -74,16 +72,24 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.androidx.navigation.compose)
-
     implementation (libs.accompanist.systemuicontroller)
+
+    //firebase
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
 
     //dagger hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     kapt(libs.androidx.hilt.compiler)
-
-    kapt(libs.kotlinx.metadata.jvm)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    //room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    kapt("androidx.room:room-compiler:2.6.1")
+
+
 
     //kotlin coroutines
     implementation(libs.kotlinx.coroutines.android)

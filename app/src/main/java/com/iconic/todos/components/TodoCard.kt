@@ -1,6 +1,7 @@
 package com.iconic.todos.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import com.iconic.todos.utils.dateFormat
 
 @Composable
 fun TodoCard(
+    update: (String) -> Unit,
     todo: Todo,
     index: Int,
     delete: (Todo) -> Unit
@@ -35,8 +37,9 @@ fun TodoCard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(100.dp)
+            .height(75.dp)
             .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.9f))
+            .clickable { update(todo.id) }
             .padding(horizontal = 16.dp),
         contentAlignment = Alignment.CenterStart
     ) {
@@ -45,28 +48,20 @@ fun TodoCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Box(
-                modifier = Modifier
-                    .size(35.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = index.toString(), style = MaterialTheme.typography.bodyLarge)
-            }
-            Spacer(modifier = Modifier.width(15.dp))
+            Text(text = "$index.", style = MaterialTheme.typography.titleLarge)
+            Spacer(modifier = Modifier.width(10.dp))
 
             Column(
                 modifier = Modifier.weight(.5f)
             ) {
                 Text(
-                    text = todo.title,
+                    text = todo.title.ifEmpty { todo.description },
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyLarge
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = todo.description, style = MaterialTheme.typography.labelSmall)
+                Spacer(modifier = Modifier.height(3.dp))
+                Text(text = dateFormat(todo.date)!!, style = MaterialTheme.typography.labelSmall)
             }
 
             Spacer(modifier = Modifier.width(15.dp))
@@ -84,11 +79,5 @@ fun TodoCard(
             )
         }
 
-        Text(
-            modifier = Modifier
-                .padding(bottom = 5.dp)
-                .align(Alignment.BottomEnd),
-            text = dateFormat(todo.date)!!, style = MaterialTheme.typography.labelSmall
-        )
     }
 }

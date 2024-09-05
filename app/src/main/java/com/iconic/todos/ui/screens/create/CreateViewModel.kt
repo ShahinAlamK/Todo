@@ -30,12 +30,9 @@ class CreateViewModel @Inject constructor(
         )
     }
 
-    fun openDialog() {
-        createTodoUiState = createTodoUiState.copy(openDialog = !createTodoUiState.openDialog)
-    }
 
     private fun validTodo(): Boolean {
-        return createTodoUiState.todo.title.isNotEmpty() && createTodoUiState.todo.description.isNotEmpty()
+        return createTodoUiState.todo.title.isNotEmpty() || createTodoUiState.todo.description.isNotEmpty()
     }
 
     fun createTodo() {
@@ -54,7 +51,7 @@ class CreateViewModel @Inject constructor(
                         }
 
                         is AppResponse.Success -> {
-                            createTodoUiState = createTodoUiState.copy(todo = Todo())
+                           // createTodoUiState = createTodoUiState.copy(todo = Todo())
                             createTodoUiState = createTodoUiState.copy(isLoading = false)
                         }
                     }
