@@ -13,6 +13,6 @@ val Black = Color(0xFF0D0D0E)
 val Red = Color(0xFFF13131)
 
 //Light-Theme-Color
-val LPrimary = Color(0xFF44C884)
+val LPrimary = Color(0xFF22F388)
 val LBackground = Color(0xFFF3F3F3)
 val LTertiary = Color(0xFFB4BBB7)

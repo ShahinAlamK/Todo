@@ -2,6 +2,7 @@ package com.iconic.todos.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +25,7 @@ fun Buttons(
     color: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
     height: Dp = 50.dp,
-    shapes: Shape = MaterialTheme.shapes.small,
+    shapes: Shape = RoundedCornerShape(0.dp),
     onClick: () -> Unit
 ) {
 
@@ -54,7 +55,7 @@ fun Buttons(
                 contentColor = contentColor
             ),
             onClick = { onClick() }) {
-            Text(text = label, style = MaterialTheme.typography.bodyLarge)
+            Text(text = label, style = MaterialTheme.typography.titleSmall)
         }
     }
 }
